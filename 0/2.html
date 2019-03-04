@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang = "pl">
+
+<head>
+		<title> Projekty </title>
+		<meta charset="utf-8"/>
+		<link rel="stylesheet" media="screen and (max-width: 480px)" href="3.css" />
+		<link rel="stylesheet" media="screen and (min-width: 480px) and (max-width: 768px)"  href="2.css" />
+		<link rel="stylesheet" media="screen and (min-width: 768px)"  href="1.css" />
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+		<script type="text/javascript">
+		$(function(){
+  			$('#link').click(function(){
+			alert('Przechodzisz do strony bitbucket');
+			})
+		});
+		</script>
+</head>
+
+<body>
+
+
+	<ul class="menu">
+  		<li><a href="1.html">Home</a></li>
+		<li><a href="5.html">O mnie</a></li>
+		<li><a href="2.html">Projekty</a></li>
+  		<li><a href="3.html">Zdjęcia</a></li>
+  		<li><a href="4.html">Kontakt</a></li>
+  		
+	</ul>
+	<div>
+		<img class="profilowe" src="MateuszDobija.jpg" alt="Zdjęcie profilowe"/>
+		<div class="kursy" > 
+			<h2 class="nazwisko">Mateusz Dobija</h2>
+			<p>W czasie studiów z części kursów moim zadaniem było przygotowanie projektów zaliczeniowych.</p>
+			<p>Można się z nimi zapoznać pod podanym linkiem w serwisie bitbucket.</p>
+			<a id="link" style="float: bottom;" href="https://bitbucket.org/crouching_tiger/">Projekty</a>
+			<p >Część projektów może być ukryta, a część jeszcze nie dodana do serwisu.
+			    W najbliższym czasie zostaną one uzupełnione.</p>
+			<p> Z ciekawszych projektów które realizowałem wspomnieć można o następujących: </p>
+			<ul class="kursy">
+				<li> Komunikacja telefon-BTS </li>
+				<li> Gra w C++ </li>
+				<li> Algorytm podziału grafu </li>
+			</ul>
+		</div>
+	</div>
+
+	<footer>
+		<p>Mateusz Dobija © 2018</p>
+	</footer>
+
+</body>
+</html>

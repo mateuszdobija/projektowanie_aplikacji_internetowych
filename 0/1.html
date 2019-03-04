@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang = "pl">
+
+<head>
+		<title> Mateusz Dobija </title>
+		<meta charset="utf-8"/>
+		<link rel="stylesheet" media="screen and (max-width: 480px)" href="3.css" />
+		<link rel="stylesheet" media="screen and (min-width: 480px) and (max-width: 768px)"  href="2.css" />
+		<link rel="stylesheet" media="screen and (min-width: 768px)"  href="1.css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<script>
+		function policz(a, b, dzialanie)
+		{
+			var a = a.value;
+			var b = b.value;
+			var dzialanie = dzialanie.value;
+
+			if(dzialanie == "add")
+			{
+				var result = parseFloat(a)+parseFloat(b);
+			}
+			else if (dzialanie == "minus")
+			{
+				var result = parseFloat(a)-parseFloat(b);
+			}
+			else if (dzialanie == "multiply")
+			{
+				var result = parseFloat(a)*parseFloat(b);
+			}
+			else if (dzialanie == "divide")
+			{
+				if( parseFloat(b) == 0.0 )
+				{
+					alert("Nie wolno dzielić przez zero!");
+				}
+				else
+				{
+					var result = parseFloat(a)/parseFloat(b);
+				}
+			}
+			else
+			{
+				alert("nieznane działanie");
+			}
+			var s= document.getElementById('res');
+  			s.value = result
+			
+		} 
+	</script>
+</head>
+
+<body>
+
+
+	<ul class="menu">
+  		<li><a href="1.html">Home</a></li>
+		<li><a href="5.html">O mnie</a></li>
+		<li><a href="2.html">Projekty</a></li>
+  		<li><a href="3.html">Zdjęcia</a></li>
+  		<li><a href="4.html">Kontakt</a></li>
+  		
+	</ul>
+	<div>
+		<img class="profilowe" src="MateuszDobija.jpg" alt="Zdjęcie profilowe"> 
+		<h2 class="nazwisko">Mateusz Dobija</h2>
+		<p>Zapraszam do obejrzenia mojej strony - wizytówki</p>
+
+ 		<form onsubmit = "return false">
+  			<input type="text" id="a">
+			<select id = "s1">
+ 				<option value="add">+</option>
+  				<option value="minus">-</option>
+  				<option value="multiply">*</option>
+  				<option value="divide">/</option>
+			</select> 
+  			<input type="text" id="b">
+			
+  			<button  onclick="policz(a, b, s1)"> = </button>
+			<input type="text" id = "res">
+		</form>
+
+		
+	</div>
+
+
+	<footer>
+		<p>Mateusz Dobija © 2018</p>
+	</footer>
+
+</body>
+</html>
