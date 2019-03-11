@@ -17,6 +17,12 @@ const server = http.createServer((req, res) => {
   		res.setHeader('Content-Type', 'text/plain');
   		res.end('Hello z podstrony hello\n');
 	}
+	else
+	{
+		res.statusCode = 200;
+  		res.setHeader('Content-Type', 'text/plain');
+  		res.end('Jakas podstrona\n');
+	}
 });
 
 server.listen(port, hostname, () => {
