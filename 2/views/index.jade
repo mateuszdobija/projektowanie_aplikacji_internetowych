@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	h1= title
+	p Welcome to #{title}
+
+	form(method="POST" action="/powitanie2")
+		input(type="text" placeholder="imie" name="imie")
+		input(type="text" placeholder="nazwisko" name="nazwisko")
+		input(type="submit" value="Wyślij1")
+
+	form(method="GET" action="/powitanie3")
+		input(type="text" placeholder="imie" name="imie")
+		input(type="text" placeholder="nazwisko" name="nazwisko")
+		input(type="submit" value="Wyślij2")
