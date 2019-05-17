@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  body
+    ul.menu
+      li
+        a(href='/') Home
+      li
+        a(href='/samochody') Samochody
+      li
+        a(href='/kontakt') Kontakt
+      li.register
+        a(href='/rejestracja') Rejestracja
+      li.register
+        a(href='/logowanie') Logowanie
+    div
+      img.profilowe(src='/MateuszDobija.jpg', alt='Zdjęcie profilowe')
+      .kursy
+        h2.nazwisko Baza samochodów
+        p
+          | Poniżej możesz zapoznać się z listą samochodów dostępnych w naszej ofercie:
+        table
+          tr
+            th numer rejestracyjny
+            th marka
+            th model
+            th rok
+            th zdjęcie
+            th cena [dzień]
+          each item in data 
+            tr
+              td #{item.registration_number}
+              td #{item.make}
+              td #{item.model}
+              td #{item.year}
+              td.samochody
+                img#zdjecie(src='#{item.registration_number}'+'.jpg', alt='Zdjęcie profilowe')
+              td #{item.price}
+
+        
+    footer
+      p Mateusz Dobija © 2019
