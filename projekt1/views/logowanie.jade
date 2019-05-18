@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  body
+    ul.menu
+      li
+        a(href='/') Home
+      li
+        a(href='/samochody') Samochody
+      li
+        a(href='/kontakt') Kontakt
+      li.register
+        a(href='/rejestracja') Rejestracja
+      li.register
+        a(href='/logowanie') Logowanie
+    div
+      img.profilowe(src='/MateuszDobija.jpg', alt='Zdjęcie profilowe')
+      h2.nazwisko Panel użytkownika - logowanie
+
+
+      form(method="POST"  action="/logowanie")
+        input(type="text" placeholder='adres e-mail' name="email")
+        input(type="text" placeholder='hasło' name="password")
+        input(type="submit" value="Zaloguj")
+        
+    footer
+      p Mateusz Dobija © 2019
+
