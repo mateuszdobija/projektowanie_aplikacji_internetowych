@@ -18,7 +18,7 @@ function isAuthenticatedAdmin(req, res, next) {
   if (req.isAuthenticated() && req.user.isAdmin == 0) { next(); } else res.redirect('/login');
  }
 
-passport.use(new LocalStrategy({
+passport.use('admin', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
   passReqToCallback : true
@@ -50,7 +50,7 @@ passport.use(new LocalStrategy({
   }
 ));
 
-passportUser.use(new LocalStrategy({
+passport.use('user', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
   passReqToCallback : true
@@ -82,14 +82,14 @@ passportUser.use(new LocalStrategy({
   }
 ));
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser( function(user, done) {
   done(null, user);
 });
 
 passportUser.serializeUser(function(user, done) {
   done(null, user);
 });
-
+/*
 passport.deserializeUser(function(user, done) {
   done(null, user);
 });
@@ -159,7 +159,7 @@ router.get('/logowanie', function(req, res, next) {
 /* POST admin logowanie. */
 router.post('/admin', function(req, res, next) {
 
-  passport.authenticate('local', { successRedirect: '/',
+  passport.authenticate('admin', { successRedirect: '/',
   failureRedirect: '/kontakt' })(req, res, next);
 
 });
@@ -168,7 +168,7 @@ router.post('/admin', function(req, res, next) {
 /* POST user logowanie. */
 router.post('/logowanie', function(req, res, next) {
 
-  passportUser.authenticate('local', { successRedirect: '/',
+  passportUser.authenticate('user', { successRedirect: '/',
   failureRedirect: '/kontakt' })(req, res, next);
 });
 
