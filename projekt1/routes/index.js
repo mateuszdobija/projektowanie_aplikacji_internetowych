@@ -86,17 +86,10 @@ passport.serializeUser( function(user, done) {
   done(null, user);
 });
 
-passportUser.serializeUser(function(user, done) {
-  done(null, user);
-});
-/*
 passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-passportUser.deserializeUser(function(user, done) {
-  done(null, user);
-});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
