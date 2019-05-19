@@ -3,8 +3,19 @@ var router = express.Router();
 var mysql = require('mysql');
 const bcrypt = require('bcrypt');
 var passport = require('passport');
+var passportUser = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
+
+function isAuthenticatedAdmin(req, res, next) {
+  
+  if (req.isAuthenticated() && req.user.isAdmin == 1) { next(); } else res.redirect('/admin');
+ }
+
+ function isAuthenticatedUser(req, res, next) {
+  
+  if (req.isAuthenticated() && req.user.isAdmin == 0) { next(); } else res.redirect('/login');
+ }
 
 passport.use(new LocalStrategy({
   usernameField: 'email',
@@ -17,17 +28,49 @@ passport.use(new LocalStrategy({
 
     if(!username || !password ) { return done(null, false); }
       
-    dbconn.query("select * from Admins where email = '"+ username+"'", function(err, rows){
+    db.query("select * from Admins where email = '"+ username+"'", function(err, rows){
       
       if (err) { return done(null, false) };
       if(!rows.length){ return done(null, false)}
 
       var encPassword = password;
-      var dbPassword  = rows[0].haslo;
+      var dbPassword  = rows[0].password;
 
       bcrypt.compare(encPassword, dbPassword, function(err, res) {
       if(res) {
-          return done(null, { first_name: rows[0].first_name, surname: rows[0].surname, email: rows[0].email });
+          return done(null, { first_name: rows[0].first_name, surname: rows[0].surname, email: rows[0].email, isAdmin: 1 });
+
+      } else {
+        return done(null, false);
+      } 
+      });
+
+    });
+  }
+));
+
+passportUser.use(new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'password',
+  passReqToCallback : true
+},
+  function(req, username, password, done) {
+    username = req.body.email;
+    password = req.body.password;
+
+    if(!username || !password ) { return done(null, false); }
+      
+    db.query("select * from Users where email = '"+ username+"'", function(err, rows){
+      
+      if (err) { return done(null, false) };
+      if(!rows.length){ return done(null, false)}
+
+      var encPassword = password;
+      var dbPassword  = rows[0].password;
+
+      bcrypt.compare(encPassword, dbPassword, function(err, res) {
+      if(res) {
+          return done(null, { first_name: rows[0].first_name, surname: rows[0].surname, email: rows[0].email, isAdmin: 0 });
 
       } else {
         return done(null, false);
@@ -42,7 +85,15 @@ passport.serializeUser(function(user, done) {
   done(null, user);
 });
 
+passportUser.serializeUser(function(user, done) {
+  done(null, user);
+});
+
 passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+passportUser.deserializeUser(function(user, done) {
   done(null, user);
 });
 
@@ -88,8 +139,8 @@ router.post('/zarejestruj', function(req, res, next) {
       var query = " INSERT INTO Users values ('" + email + "','" + first_name + "','" + surname + "','" + birth_date + "','" + phone + "','" + hash + "')";
 
       db.query(query, function(err, data) {
-	    res.redirect('/');
-	});
+	      res.redirect('/');
+	    });
     });
   });
 });
@@ -108,36 +159,39 @@ router.get('/logowanie', function(req, res, next) {
 router.post('/admin', function(req, res, next) {
 
   passport.authenticate('local', { successRedirect: '/',
-  failureRedirect: '/kontakt' });
+  failureRedirect: '/kontakt' })(req, res, next);
 
-  //var query = " Select * from Admins where email = '" + email + "'";
-
-  //console.log('query:', query);
-  //db.query(query, function(err, data) {
-    //dopisać autentykację
-
-	    //res.redirect('/');
 });
 
 
-/* POST admin logowanie. */
+/* POST user logowanie. */
 router.post('/logowanie', function(req, res, next) {
 
-  var email = req.body.email;
-  var password = req.body.password;
-
-
-
-  var query = " Select * from Users where email = '" + email + "'";
-
-  console.log('query:', query);
-  db.query(query, function(err, data) {
-    //dopisać autentykację
-
-	    res.redirect('/');
-	});
+  passportUser.authenticate('local', { successRedirect: '/',
+  failureRedirect: '/kontakt' })(req, res, next);
 });
 
-//router.get('/favicon.ico', (req, res) => res.status(204));
+router.get('/wyloguj', isAuthenticatedUser, 
+  function(req, res, next)
+  {
+    req.logout();
+  console.log('wylogowano');
+  res.redirect('/');
+});
+
+/* GET haszowanie hasła dla admina. */
+router.get('/admin_password_hash/:password', function(req, res, next) {
+
+  const saltRounds = 10;
+  bcrypt.genSalt(saltRounds, function(err, salt) {
+    bcrypt.hash(req.params.password, salt, function(err, hash) {
+
+      console.log("hash:", hash);
+      res.redirect('/');
+    });
+  });
+  
+});
+
 module.exports = router;
 

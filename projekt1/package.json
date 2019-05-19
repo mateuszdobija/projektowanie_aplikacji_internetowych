@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "debug": "node  --nolazy --inspect-brk=9229 ./bin/www"
   },
   "dependencies": {
     "bcrypt": "^3.0.6",
