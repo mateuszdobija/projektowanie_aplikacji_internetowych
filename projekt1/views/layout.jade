@@ -7,4 +7,22 @@ html
     link(rel='stylesheet', media='screen and (min-width: 480px) and (max-width: 768px)', href='/2.css')
     link(rel='stylesheet', media='screen and (min-width: 768px)', href='/1.css')
   body
+    ul.menu
+      li
+        a(href='/') Home
+      li
+        a(href='/samochody') Samochody
+      li
+        a(href='/kontakt') Kontakt
+      if !user
+        li.register
+          a(href='/rejestracja') Rejestracja
+        li.register
+          a(href='/logowanie') Logowanie
+      else if user.isAdmin == 0
+        li.register
+          a(href='/wyloguj') Wyloguj
+      else
+        li.register
+          a(href='/wyloguj_admin') Wyloguj
     block content

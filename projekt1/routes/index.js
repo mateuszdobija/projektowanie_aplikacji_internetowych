@@ -6,6 +6,7 @@ var passport = require('passport');
 var passportUser = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
+const saltRounds = 10;
 
 function isAuthenticatedAdmin(req, res, next) {
   
@@ -99,7 +100,7 @@ passportUser.deserializeUser(function(user, done) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Home' });
+  res.render('index', { title: 'Home', user:req.user });
 });
 
 /* GET samochody. */
@@ -107,19 +108,19 @@ router.get('/samochody', function(req, res, next) {
 
 	var query = "select * from Cars";
 	db.query(query, function(err, data) {
-	      res.render('samochody', { title: 'Samochody', data: data });
+	      res.render('samochody', { title: 'Samochody', data: data , user:req.user });
 	});
 
 });
 
 /* GET kontakt page. */
 router.get('/kontakt', function(req, res, next) {
-  res.render('kontakt', { title: 'Kontakt' });
+  res.render('kontakt', { title: 'Kontakt', user:req.user  });
 });
 
 /* GET rejestracja page. */
 router.get('/rejestracja', function(req, res, next) {
-  res.render('rejestracja', { title: 'Rejestracja' });
+  res.render('rejestracja', { title: 'Rejestracja', user:req.user  });
 });
 
 /* POST rejestracja. */
@@ -147,12 +148,12 @@ router.post('/zarejestruj', function(req, res, next) {
 
 /* GET admin logowanie. */
 router.get('/admin', function(req, res, next) {
-    res.render('admin', { title: 'Admin' });
+    res.render('admin', { title: 'Admin' , user:req.user });
 });
 
 /* GET user logowanie. */
 router.get('/logowanie', function(req, res, next) {
-  res.render('logowanie', { title: 'Logowanie' });
+  res.render('logowanie', { title: 'Logowanie', user:req.user });
 });
 
 /* POST admin logowanie. */
@@ -175,14 +176,22 @@ router.get('/wyloguj', isAuthenticatedUser,
   function(req, res, next)
   {
     req.logout();
-  console.log('wylogowano');
-  res.redirect('/');
+    console.log('wylogowano');
+    res.redirect('/');
+});
+
+router.get('/wyloguj_admin', isAuthenticatedAdmin, 
+  function(req, res, next)
+  {
+    req.logout();
+    console.log('wylogowano');
+    res.redirect('/');
 });
 
 /* GET haszowanie hasła dla admina. */
 router.get('/admin_password_hash/:password', function(req, res, next) {
 
-  const saltRounds = 10;
+ 
   bcrypt.genSalt(saltRounds, function(err, salt) {
     bcrypt.hash(req.params.password, salt, function(err, hash) {
 

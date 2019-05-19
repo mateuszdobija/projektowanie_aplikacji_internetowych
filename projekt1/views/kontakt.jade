@@ -1,39 +1,27 @@
 extends layout
 
 block content
-  body
-    ul.menu
-      li
-        a(href='/') Home
-      li
-        a(href='/samochody') Samochody
-      li
-        a(href='/kontakt') Kontakt
-      li.register
-        a(href='/rejestracja') Rejestracja
-      li.register
-        a(href='/logowanie') Logowanie
-    div
-      img.profilowe(src='/MateuszDobija.jpg', alt='Zdjęcie profilowe')
-      .kursy
-        h2.nazwisko Mateusz Dobija
-        p
-          | Jeżeli chcesz zadać dodatkowe pytania w sprawie wypożyczenia samochodu, zapytać o szczegóły wyposażenia albo skontaktować się ze mną w innej sprawie, napisz:
-        p mail: mateusz.dobija@student.uj.edu.pl 
-        a(href='mailto:mateusz.dobija@student.uj.edu.pl') Kliknij aby napisać
-        p
-          | Zapraszamy również do kontaktu osobistego w naszej wypożyczalni:
-          br
-          br
-          | Kraków
-          br
-          | 11-111, ul. Nieznana 1
-          br
-          | telefon: 11 111 22 33
-          br
-          br
-          | godziny otwarcia:
-          br
-          | pon-ndz 8:00-20:00
-    footer
-      p Mateusz Dobija © 2018
+  div
+    img.profilowe(src='/MateuszDobija.jpg', alt='Zdjęcie profilowe')
+    .kursy
+      h2.nazwisko Mateusz Dobija
+      p
+        | Jeżeli chcesz zadać dodatkowe pytania w sprawie wypożyczenia samochodu, zapytać o szczegóły wyposażenia albo skontaktować się ze mną w innej sprawie, napisz:
+      p mail: mateusz.dobija@student.uj.edu.pl 
+      a(href='mailto:mateusz.dobija@student.uj.edu.pl') Kliknij aby napisać
+      p
+        | Zapraszamy również do kontaktu osobistego w naszej wypożyczalni:
+        br
+        br
+        | Kraków
+        br
+        | 11-111, ul. Nieznana 1
+        br
+        | telefon: 11 111 22 33
+        br
+        br
+        | godziny otwarcia:
+        br
+        | pon-ndz 8:00-20:00
+  footer
+    p Mateusz Dobija © 2018

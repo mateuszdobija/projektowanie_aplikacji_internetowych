@@ -1,32 +1,17 @@
 extends layout
 
 block content
-  body
-    ul.menu
-      li
-        a(href='/') Home
-      li
-        a(href='/samochody') Samochody
-      li
-        a(href='/kontakt') Kontakt
-      li.register
-        a(href='/rejestracja') Rejestracja
-      li.register
-        a(href='/logowanie') Logowanie
-    div
-      img.profilowe(src='/MateuszDobija.jpg', alt='Zdjęcie profilowe')
-      h2.nazwisko Rejestracja użytkownika
-
-
-      form(method="POST"  action="/zarejestruj")
-        input(type="text" placeholder='adres e-mail' name="email")
-        input(type="text" placeholder='imię' name="first_name")
-        input(type="text" placeholder='nazwisko' name="surname")
-        input(type="text" placeholder='numer telefonu' name="phone")
-        input(type="text" placeholder='hasło' name="password")
-        input(type="date" placeholder='data urodzenia' name="birth_date")
-        input(type="submit" value="Zarejestruj")
-        
-    footer
-      p Mateusz Dobija © 2019
+  div
+    img.profilowe(src='/MateuszDobija.jpg', alt='Zdjęcie profilowe')
+    h2.nazwisko Rejestracja użytkownika
+    form(method="POST"  action="/zarejestruj")
+      input(type="text" placeholder='adres e-mail' name="email")
+      input(type="text" placeholder='imię' name="first_name")
+      input(type="text" placeholder='nazwisko' name="surname")
+      input(type="text" placeholder='numer telefonu' name="phone")
+      input(type="text" placeholder='hasło' name="password")
+      input(type="date" placeholder='data urodzenia' name="birth_date")
+      input(type="submit" value="Zarejestruj")        
+  footer
+    p Mateusz Dobija © 2019
 
