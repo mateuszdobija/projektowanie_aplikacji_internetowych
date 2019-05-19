@@ -195,5 +195,32 @@ router.get('/admin_password_hash/:password', function(req, res, next) {
   
 });
 
+router.get('/wyszukaj', isAuthenticatedUser, 
+  function(req, res, next)
+  {
+    res.render('wyszukaj', { title: 'wyszukaj' , user:req.user });
+});
+
+router.post('/wyszukaj', isAuthenticatedUser, 
+  function(req, res, next)
+  {
+    var start = req.body.start;
+    var end = req.body.end;
+    res.redirect('/samochody_dostepne/'+start+'/'+end);
+});
+
+router.get('/samochody_dostepne/:start/:end', isAuthenticatedUser, 
+  function(req, res, next)
+  {
+    var start = req.params.start;
+    var end = req.params.end;
+
+    var query = "select * from Cars";
+	  db.query(query, function(err, data) {
+	      res.render('samochody', { title: 'Samochody', data: data , user:req.user });
+	  });
+    res.render('wyszukaj', { title: 'wyszukaj' , user:req.user });
+});
+
 module.exports = router;
 

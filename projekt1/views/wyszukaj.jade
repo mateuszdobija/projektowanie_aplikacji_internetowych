@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  div
+    img.profilowe(src='/MateuszDobija.jpg', alt='Zdjęcie profilowe')
+    h2.nazwisko Wyszukaj samochody dostępne w danym zakresie
+    form(method="POST"  action="/wyszukaj")
+      p data początkowa
+        input(type="date" placeholder='data początkowa' name="start")
+      p data końcowa
+        input(type="date" placeholder='data końcowa' name="end")
+      input(type="submit" value="Wyszukaj")       
+  footer
+    p Mateusz Dobija © 2019
+
