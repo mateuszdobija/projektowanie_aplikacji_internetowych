@@ -18,6 +18,11 @@ function isAuthenticatedAdmin(req, res, next) {
   if (req.isAuthenticated() && req.user.isAdmin == 0) { next(); } else res.redirect('/logowanie');
  }
 
+ function isAuthenticatedSomeone(req, res, next) {
+  
+  if (req.isAuthenticated()) { next(); } else res.redirect('/logowanie');
+ }
+
 passport.use('admin', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
@@ -271,6 +276,122 @@ router.get('/samochody_dostepne/:start/:end', isAuthenticatedUser,
     
     });
     
+});
+
+/* Post zarezerwuj. */
+router.get('/zarezerwuj/:registration_number/:start/:end',isAuthenticatedUser, function(req, res, next) {
+  
+  var registration_number = req.params.registration_number;
+  var start = req.params.start;
+  var end = req.params.end;
+  var term = Math.floor(( Date.parse(end) - Date.parse(start) ) / 86400000)+1; 
+
+	var query = "insert into Hires (registration_number, start, end, status,email, term) values ('"+registration_number+"','"+start + "','"+ end + "','niezatwierdzone','"+ req.user.email+"','"+term+"')";
+	db.query(query, function(err, data) {
+        if(err)
+        {
+          console.log(err);
+        }
+        res.redirect('/');
+        console.log('query:',query);
+	});
+
+});
+
+router.get('/user_panel',isAuthenticatedUser,function(req, res, next) {
+  
+  query = "select * from ( select id , registration_number,DATE_FORMAT(start , '%Y-%m-%d') as start,DATE_FORMAT(end , '%Y-%m-%d') as end,status,email,term from Hires where email= '"+ req.user.email + "')as Hires join Cars on Hires.registration_number = Cars.registration_number";
+
+
+  db.query(query, function(err, data) {
+    console.log(data);
+    res.render('user_panel', { title: 'user_panel' , user:req.user, data:data});
+
+  });
+
+});
+
+router.get('/anuluj_rezerwacje/:id',isAuthenticatedUser,function(req, res, next) {
+
+  var id = req.params.id;
+  query = "delete from Hires where id = "+id;
+
+  db.query(query, function(err, data) {
+    console.log(data);
+    res.redirect('/user_panel');
+
+  });
+});
+
+router.get('/modyfikuj_rezerwacje/:id',isAuthenticatedUser,function(req, res, next) {
+
+  var id = req.params.id;
+
+  query = "select * from ( select id , registration_number,DATE_FORMAT(start , '%Y-%m-%d') as start,DATE_FORMAT(end , '%Y-%m-%d') as end,status,email,term from Hires where email= '"+ req.user.email + "')as Hires join Cars on Hires.registration_number = Cars.registration_number where id = "+id;
+
+
+  db.query(query, function(err, data) {
+    console.log(data);
+    res.render('modyfikuj_rezerwacje', { title: 'modyfikuj rezerwacje' , user:req.user, data:data});
+
+  });
+});
+/*
+router.get('/modyfikuj_rezerwacje/:id',isAuthenticatedUser,function(req, res, next) {
+
+  var id = req.params.id;
+
+  query = "select * from ( select id , registration_number,DATE_FORMAT(start , '%Y-%m-%d') as start,DATE_FORMAT(end , '%Y-%m-%d') as end,status,email,term from Hires where email= '"+ req.user.email + "')as Hires join Cars on Hires.registration_number = Cars.registration_number where id = "+id;
+
+
+  db.query(query, function(err, data) {
+    console.log(data);
+    res.render('modyfikuj_rezerwacje', { title: 'modyfikuj rezerwacje' , user:req.user, data:data});
+
+  });
+});*/
+
+router.post('/modyfikuj_rezerwacje',isAuthenticatedSomeone,function(req, res, next) {
+
+  var id = req.body.hidden_id;
+  var start = req.body.start;
+  var end = req.body.end;
+
+  query = "update Hires set start='"+start+"', end = '"+end+"' where id = "+id;
+  console.log('query:', query);
+
+  db.query(query, function(err, data) {
+    console.log(data);
+    res.redirect('/user_panel');
+
+  });
+});
+
+router.get('/admin_panel',isAuthenticatedAdmin,function(req, res, next) {
+  
+  query = "select * from ( select id , registration_number,DATE_FORMAT(start , '%Y-%m-%d') as start,DATE_FORMAT(end , '%Y-%m-%d') as end,status,email,term from Hires )as Hires join Cars on Hires.registration_number = Cars.registration_number";
+
+
+  db.query(query, function(err, data) {
+    console.log(data);
+    res.render('admin_panel', { title: 'admin_panel' , user:req.user, data:data});
+
+  });
+
+});
+
+router.get('/confirm/:id',isAuthenticatedAdmin,function(req, res, next) {
+  
+  var id = req.params.id;
+  query = "update Hires set status = 'zatwierdzone' where id = "+id; 
+
+
+  db.query(query, function(err, data) {
+    console.log(data);
+    res.redirect('/admin_panel');
+
+  });
+
 });
 
 module.exports = router;

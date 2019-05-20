@@ -1,0 +1,41 @@
+extends layout
+
+block content
+  div
+    img.profilowe(src='/MateuszDobija.jpg', alt='Zdjęcie profilowe')
+    .kursy
+      h2.nazwisko Twoje wypożyczenia
+      p
+        | Poniżej możesz zapoznać się z listą samochodów przez Ciebie wypożyczonych:
+      table
+        tr
+          th id
+          th numer_rejestracyjny
+          th od
+          th do
+          th marka
+          th model
+          th cena [zł]
+          th status
+        each item in data 
+          tr
+            td #{item.id}
+            td #{item.registration_number}
+            td #{item.start}
+            td #{item.end}
+            td #{item.make}
+            td #{item.model}
+            - var a = item.term
+            - var b = item.price
+            - var result = parseFloat(a)*parseFloat(b)
+            td #{result}
+            td #{item.status}
+            td
+              form(method="get"  action="/anuluj_rezerwacje/"+item.id)
+                input(type="submit" value="Usuń")
+            td
+              form(method="get"  action="/modyfikuj_rezerwacje/"+item.id)
+                input(type="submit" value="Modyfikuj")
+            
+  footer
+    p Mateusz Dobija © 2019

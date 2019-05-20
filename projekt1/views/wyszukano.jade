@@ -32,6 +32,9 @@ block content
             - var a = term
             - var b = item.price
             - var result = parseFloat(a)*parseFloat(b)
-            td #{result}    
+            td #{result}
+            td
+              form(action="/zarezerwuj/"+item.registration_number+'/'+ start + '/' + end method="get") 
+                input(type="submit" value="Zarezerwuj")
   footer
     p Mateusz Dobija © 2019
