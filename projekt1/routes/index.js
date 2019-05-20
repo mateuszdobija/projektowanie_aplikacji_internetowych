@@ -15,7 +15,7 @@ function isAuthenticatedAdmin(req, res, next) {
 
  function isAuthenticatedUser(req, res, next) {
   
-  if (req.isAuthenticated() && req.user.isAdmin == 0) { next(); } else res.redirect('/login');
+  if (req.isAuthenticated() && req.user.isAdmin == 0) { next(); } else res.redirect('/logowanie');
  }
 
 passport.use('admin', new LocalStrategy({
@@ -209,6 +209,10 @@ router.post('/wyszukaj', isAuthenticatedUser,
     res.redirect('/samochody_dostepne/'+start+'/'+end);
 });
 
+function FirstBeforeSecond(date1, date2){
+    return +(new Date(date2)) >= +(new Date(date1));
+}
+
 router.get('/samochody_dostepne/:start/:end', isAuthenticatedUser, 
   function(req, res, next)
   {
@@ -216,10 +220,57 @@ router.get('/samochody_dostepne/:start/:end', isAuthenticatedUser,
     var end = req.params.end;
 
     var query = "select * from Cars";
+    var cars = new Set();
 	  db.query(query, function(err, data) {
-	      res.render('samochody', { title: 'Samochody', data: data , user:req.user });
-	  });
-    res.render('wyszukaj', { title: 'wyszukaj' , user:req.user });
+        //res.render('samochody', { title: 'Samochody', data: data , user:req.user });
+        //console.log('dlugosc:', data.length ) //ilośc samochodów z bazy - działa
+        
+        for(var i = 0; i < data.length; i++)
+        {
+          cars.add(data[i].registration_number);
+        }
+        console.log('cars:', cars)  //zbiór numerów rejestracyjnych samochodów z bazy
+
+
+        var query = "select id,registration_number, DATE_FORMAT(start , '%Y-%m-%d') as start, DATE_FORMAT(end , '%Y-%m-%d') as end, status from Hires";
+        db.query(query, function(err, data) {
+         // console.log('wywołano Hires');
+          for(var i = 0; i < data.length; i++)
+          {
+            var startdb = data[i].start;
+            var enddb = data[i].end;
+            //console.log('w pętli');
+            if( FirstBeforeSecond(start, startdb)== true && FirstBeforeSecond(startdb,end ) == true) //daty nachodza na siebie
+            {
+              cars.delete(data[i].registration_number);
+              //console.log('usuwamy:');
+            }
+            else if ( FirstBeforeSecond(startdb, start)== true && FirstBeforeSecond(start, enddb) == true) //daty nachodzą na siebie
+            {
+              cars.delete(data[i].registration_number);
+              //console.log('usuwamy:');
+            }
+            else{
+            /*  console.log('nie usuwamy');
+              console.log('start:', start);
+              console.log('startdb:', startdb);
+              console.log('end:', end);
+              console.log('enddb:', enddb)*/
+            }
+          }
+          //console.log('auta po usunieciu:', cars);
+          var term = Math.floor(( Date.parse(end) - Date.parse(start) ) / 86400000)+1; 
+          var query = "select* from Cars where registration_number in ('"+Array.from(cars).join('\',\'') + "')";
+          db.query(query, function(err, data) {
+            res.render('wyszukano', { title: 'wyszukano' , user:req.user, data:data, start:start, end:end, term:term});
+
+          });
+          console.log('query', query);
+        });
+
+    
+    });
+    
 });
 
 module.exports = router;
